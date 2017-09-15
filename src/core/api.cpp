@@ -108,6 +108,7 @@
 #include "textures/imagemap.h"
 #include "textures/marble.h"
 #include "textures/mix.h"
+#include "textures/opal.h"
 #include "textures/ptex.h"
 #include "textures/scale.h"
 #include "textures/uv.h"
@@ -511,6 +512,8 @@ std::shared_ptr<Texture<Float>> MakeFloatTexture(const std::string &name,
 		tex = CreateWindyFloatTexture(tex2world, tp);
 	else if (name == "ptex")
 		tex = CreatePtexFloatTexture(tex2world, tp);
+	else if (name == "damascusSteel")
+		tex = CreateOpalFloatTexture(tex2world, tp);
 	else
 		Warning("Float texture \"%s\" unknown.", name.c_str());
 	tp.ReportUnused();
@@ -547,6 +550,8 @@ std::shared_ptr<Texture<Spectrum>> MakeSpectrumTexture(
 		tex = CreateWindySpectrumTexture(tex2world, tp);
 	else if (name == "ptex")
 		tex = CreatePtexSpectrumTexture(tex2world, tp);
+	else if (name == "damascusSteel")
+		tex = CreateOpalSpectrumTexture(tex2world, tp);
 	else
 		Warning("Spectrum texture \"%s\" unknown.", name.c_str());
 	tp.ReportUnused();
