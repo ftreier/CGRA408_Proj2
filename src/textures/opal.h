@@ -84,6 +84,7 @@ class OpalTexture : public Texture<Spectrum>
 
 			float t[3] = { _randDev(randGen), _randDev(randGen), _randDev(randGen) };
 
+			//return col + Spectrum::FromRGB(t) * _colorVariant;
 			return col + Spectrum::FromRGB(t) * _colorVariant;
 			//if (opal > 0.3)
 			//{

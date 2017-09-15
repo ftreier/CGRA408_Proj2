@@ -1,0 +1,29 @@
+
+LookAt 2 2 5   0 -.4 0 0 1 0
+Camera "perspective" "float fov" [45]
+
+Film "image" "integer xresolution" [1000] "integer yresolution" [1000] 
+    "string filename" "PBRT/files/sphere30.exr"
+
+Integrator "directlighting" "integer maxdepth" [10]
+
+
+Sampler "halton" "integer pixelsamples" [16]
+
+PixelFilter "box"
+
+WorldBegin
+LightSource "distant" "point from" [0 10 0 ] "point to" [0 0 0 ]
+    "color L" [3.141593 3.141593 1 ] 
+
+LightSource "distant" "point from" [-2 -5 0 ] "point to" [0 0 0 ]
+    "color L" [1 1 3.141593 ] 
+
+LightSource "distant" "point from" [5 -5 5 ] "point to" [0 0 0 ]
+    "color L" [0.2 1 0.1 ] 
+
+Translate 0 -0.5 0
+Material "matte" "rgb Kd" [ .5 .6 .3 ]
+Shape "sphere" "float radius" [2] "float phimax" [30]
+
+WorldEnd

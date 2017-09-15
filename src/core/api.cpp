@@ -1419,8 +1419,8 @@ void pbrtWorldEnd() {
 		MergeWorkerThreadStats();
 		ReportThreadStats();
 		if (!PbrtOptions.quiet) {
-			PrintStats(stdout);
-			ReportProfilerResults(stdout);
+			//PrintStats(stdout);
+			//ReportProfilerResults(stdout);
 			ClearStats();
 			ClearProfiler();
 		}
