@@ -48,14 +48,14 @@ namespace pbrt
 		// Initialize 3D texture _mapping _map_ from _tp_
 		std::unique_ptr<TextureMapping3D> map(new IdentityMapping3D(tex2world));
 		float mc[3] = { 147.0 / 255.0, 160.0 / 255.0, 223.0 / 255.0 };
-		auto mainColor = tp.FindSpectrum("mainColor", Spectrum::FromRGB(mc));
+		auto mainColor = tp.FindSpectrum("mainCol", Spectrum::FromRGB(mc));
 		float c1[3] = { 240.0 / 255.0, 162.0 / 255.0, 177.0 / 255.0 };
 		auto col1 = tp.FindSpectrum("col1", Spectrum::FromRGB(c1));
 		float c2[3] = { 132.0 / 255.0, 235.0 / 255.0, 162.0 / 255.0 };
 		auto col2 = tp.FindSpectrum("col2", Spectrum::FromRGB(c2));
 
 		return new OpalTexture(std::move(map), tp.FindInt("octaves", 8), tp.FindFloat("roughness", .5f),
-			tp.FindFloat("scale", 1.f), tp.FindFloat("smoothness", .2f), tp.FindFloat("colorVariant", .5f), mainColor, col1, col2);
+			tp.FindFloat("scale", 1.f), tp.FindFloat("smoothness", .2f), tp.FindFloat("colourVariant", .5f), mainColor, col1, col2);
 	}
 
 }  // namespace pbrt
