@@ -4,17 +4,14 @@ import os.path
 
 plasticName = 'Plastic'
 
-def defaultButtonPush(*args):
-    # get Path to PBRT executable
-    sep = '\\'
-    pp = cmds.textField(pbrtPath, text=1, q=1)
+def writeSceneFile(scenePath, resultPath):
+    if os.path.isfile(scenePath):
+        print 'deleting pbrt file ' + scenePath
+        os.remove(scenePath)
     
-    pp = pp.replace('/', '\\\\')
-        
-    # check if the given file exists
-    if not os.path.isfile(pp):
-        print 'could not find pbrt executable at ' + pp
-        return
+    if os.path.isfile(resultPath):
+        print 'deleting result image ' + resultPath
+        os.remove(resultPath)
         
     # prepare values
     matVal = cmds.optionMenu(matOm, value = 1, q = 1)
@@ -34,19 +31,6 @@ def defaultButtonPush(*args):
     remapRoughVal = cmds.checkBox(remapRoughCb, value = 1, q = 1)
     sigmaVal = cmds.floatField(sigmaFf, value = 1, q = 1)
     
-    # prepare scene file
-    dir = pp[:pp.rfind(sep)]
-    scenePath = dir + sep +'opal.pbrt'
-    if os.path.isfile(scenePath):
-        print 'deleting pbrt file ' + scenePath
-        os.remove(scenePath)
-    
-    # prepare output file
-    resultPath = dir + sep +'opal.png'
-    if os.path.isfile(resultPath):
-        print 'deleting result image ' + resultPath
-        os.remove(resultPath)
-        
     # create scene file
     sceneFile = open(scenePath, 'w')
     sceneFile.write('LookAt 2 2 5   0 -.4 0 0 1 0\n')
@@ -54,7 +38,7 @@ def defaultButtonPush(*args):
     sceneFile.write('Film "image" "integer xresolution" [150] "integer yresolution" [150] "string filename" "')
     sceneFile.write(resultPath.replace('\\', '\\\\'))
     sceneFile.write('"\n')
-    sceneFile.write('Sampler "halton" "integer pixelsamples" [1]\n')
+    sceneFile.write('Sampler "halton" "integer pixelsamples" [8]\n')
     sceneFile.write('WorldBegin\n')
     sceneFile.write('LightSource "infinite" "color L" [1 1 1]\n')
     sceneFile.write('Translate 0 -0.4 0\n')
@@ -109,7 +93,26 @@ def defaultButtonPush(*args):
     sceneFile.write('Shape "sphere"\n')
     sceneFile.write('WorldEnd\n')
     sceneFile.close()
+    
+def defaultButtonPush(*args):
+    # get Path to PBRT executable
+    sep = '\\'
+    pp = cmds.textField(pbrtPath, text=1, q=1)
+    
+    pp = pp.replace('/', '\\\\')
+        
+    # check if the given file exists
+    if not os.path.isfile(pp):
+        print 'could not find pbrt executable at ' + pp
+        return
+        
+    # prepare scene file
+    dir = pp[:pp.rfind(sep)]
+    scenePath = dir + sep +'opal.pbrt'
+    # prepare output file
+    resultPath = dir + sep +'opal.png'
 
+    writeSceneFile(scenePath, resultPath)
     # Run PBRT    
     subprocess.call([pp, scenePath], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     
@@ -187,8 +190,13 @@ def changeTextureVisibility(item):
     cmds.floatField(colVarFf, visible = opalVis, height = opalHeight, e = 1)
     cmds.text(colVarT1, visible = opalVis, height = opalHeight, e = 1)
     
-    
-        
+def savePbrtSceneFile(*args):
+    pp = cmds.textField(pbrtPath, text=1, q=1)
+    sep = '\\'
+    location = cmds.fileDialog( m = 1, dm = pp[:pp.rfind(sep)] + sep + '*.pbrt', dfn = 'material.pbrt')
+    if location:
+        location = location.replace('/', '\\\\')
+        writeSceneFile(location, (location[location.rfind(sep)+1:location.rfind('.')] + '.exr'))
     
 # Make a new window
 window = cmds.window( title="Material Editor", iconName='Short Name', widthHeight=(300, 600) )
@@ -264,5 +272,11 @@ cmds.button( label='...', command=choosePBRTLocation )
 
 cmds.text(label = '', visible = False, height = 1)
 cmds.button( label='Render', command=defaultButtonPush )
-cmds.setParent( '..' )
+cmds.text(label = '', visible = False, height = 1)
+
+cmds.text(label = '', visible = False, height = 1)
+cmds.button( label='Save PBRT Scene File', command=savePbrtSceneFile)
+cmds.text(label = '', visible = False, height = 1)
+
+cmds.setParent( '..')
 cmds.showWindow( window )
