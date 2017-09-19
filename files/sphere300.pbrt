@@ -1,5 +1,5 @@
 
-LookAt 2 2 5   0 -.4 0 0 1 0
+LookAt 0 0 5   0 -.4 0 0 1 0
 Camera "perspective" "float fov" [45]
 
 Film "image" "integer xresolution" [1000] "integer yresolution" [1000] 
@@ -22,8 +22,8 @@ LightSource "distant" "point from" [-2 -5 0 ] "point to" [0 0 0 ]
 LightSource "distant" "point from" [5 -5 5 ] "point to" [0 0 0 ]
     "color L" [0.2 1 0.1 ] 
 
-Translate 0 -0.5 0
+Translate 0 -0.4 0
 Material "matte" "rgb Kd" [ .5 .6 .3 ]
-Shape "sphere" "float radius" [2] "float phimax" [300]
+Shape "sphere" "float radius" [1.8] "float phimax" [300]
 
 WorldEnd
