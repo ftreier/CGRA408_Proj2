@@ -94,7 +94,7 @@ def writeSceneFile(scenePath, resultPath):
     sceneFile.write('WorldEnd\n')
     sceneFile.close()
     
-def defaultButtonPush(*args):
+def renderMaterial(*args):
     # get Path to PBRT executable
     sep = '\\'
     pp = cmds.textField(pbrtPath, text=1, q=1)
@@ -199,28 +199,28 @@ def savePbrtSceneFile(*args):
         writeSceneFile(location, (location[location.rfind(sep)+1:location.rfind('.')] + '.exr'))
     
 # Make a new window
-window = cmds.window(title="Material Editor", iconName='Short Name', widthHeight=(300, 500))
-cmds.rowColumnLayout(numberOfColumns=3, columnWidth=[(1, 100), (2, 150), (3, 40)])
+window = cmds.window(title="Material Editor", widthHeight=(300, 500))
+cmds.rowColumnLayout(numberOfColumns = 3, columnWidth = [(1, 100), (2, 150), (3, 40)])
 
 cmds.text(label = 'Preview', align = 'left')
 img = cmds.image(image = '', height = 150)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = 'Material', align = 'left')
-matOm = cmds.optionMenu(changeCommand=changeMaterialVisibility)
+matOm = cmds.optionMenu(changeCommand = changeMaterialVisibility)
 cmds.menuItem(label = 'Matte')
 cmds.menuItem(label = plasticName)
 cmds.text(label = '', visible = False, height = 1)
 
-useColCb = cmds.checkBox(label = 'Use Kd Colour', changeCommand=changeMatColorVisibility)
+useColCb = cmds.checkBox(label = 'Use Kd Colour', changeCommand = changeMatColorVisibility)
 matColCs = cmds.colorSliderGrp(rgb = (1, 1, 1), visible = False)
 cmds.text(label = '', visible = False, height = 1)
 
-useKsColCb = cmds.checkBox(label = 'Use Ks Colour', changeCommand=changeMatColorVisibility, visible = False, height = 1)
+useKsColCb = cmds.checkBox(label = 'Use Ks Colour', changeCommand = changeMatColorVisibility, visible = False, height = 1)
 matKsColCs = cmds.colorSliderGrp(rgb = (1, 1, 1), visible = False, height = 1)
 cmds.text(label = '', visible = False, height = 1)
 
-useTextureCb = cmds.checkBox(label = 'Use Texture', changeCommand=changeMatColorVisibility, value = True)
+useTextureCb = cmds.checkBox(label = 'Use Texture', changeCommand = changeMatColorVisibility, value = True)
 cmds.text(label = '', visible = False, height = 1)
 cmds.text(label = '', visible = False, height = 1)
 
@@ -233,7 +233,7 @@ remapRoughCb = cmds.checkBox(label = '', value = True, visible = False, height =
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = 'Texture', align = 'left')
-textureOm = cmds.optionMenu(changeCommand=changeTextureVisibility)
+textureOm = cmds.optionMenu(changeCommand = changeTextureVisibility)
 cmds.menuItem(label = 'Opal')
 cmds.menuItem(label = 'Wrinkled')
 cmds.text(label = '', visible = False, height = 1)
@@ -268,14 +268,14 @@ cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = 'PBRT Path', align = 'left')
 pbrtPath = cmds.textField(text='C:\\Data\\Victoria\\CGRA408_Rendering\\Ass2\\build\\Release\\pbrt.exe')
-cmds.button(label='...', command=choosePBRTLocation)
+cmds.button(label='...', command = choosePBRTLocation)
 
 cmds.text(label = '', visible = False, height = 1)
-cmds.button(label='Render', command=defaultButtonPush)
+cmds.button(label='Render', command = renderMaterial)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = '', visible = False, height = 1)
-cmds.button(label='Save PBRT Scene File', command=savePbrtSceneFile)
+cmds.button(label='Save PBRT Scene File', command = savePbrtSceneFile)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.setParent('..')

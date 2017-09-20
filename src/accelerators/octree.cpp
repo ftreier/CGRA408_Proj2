@@ -12,12 +12,16 @@ namespace pbrt
 	STAT_RATIO("Octree/Primitives per leaf nodes", _primitives, _leafNodes);
 	STAT_COUNTER("Octree/Tree depth", _treeDepth);
 
+	unsigned short OctreeAccel::_maxPrimitivesPeLeaf;
+	unsigned short OctreeAccel::_maxDepth;
 
-	OctreeAccel::OctreeAccel(const vector<shared_ptr<Primitive>>& p, short maxDepth)
+	OctreeAccel::OctreeAccel(const vector<shared_ptr<Primitive>>& p, unsigned short maxDepth, unsigned short maxPrimitivesPerLeaf)
 	{
+		_maxPrimitivesPeLeaf = maxPrimitivesPerLeaf;
+		_maxDepth = maxDepth;
+
 		_treeBytes = 0;
 		_primitives = p.size();
-		_maxDepth = maxDepth;
 		_depth = 0;
 		float xmax, ymax, zmax;
 		xmax = ymax = zmax = -numeric_limits<float>::max();
@@ -66,7 +70,7 @@ namespace pbrt
 		_treeBytes += sizeof(*this) + _children.size() * sizeof(shared_ptr<Primitive>) + _nodes.size() * sizeof(shared_ptr<OctreeAccel>);
 	}
 
-	OctreeAccel::OctreeAccel(const vector<shared_ptr<Primitive>>& p, Bounds3f bounds, short maxDepth, short depth)
+	OctreeAccel::OctreeAccel(const vector<shared_ptr<Primitive>>& p, Bounds3f bounds, unsigned short depth)
 	{
 		if(_treeDepth < depth)
 		{
@@ -74,7 +78,6 @@ namespace pbrt
 		}
 
 		_bounds = bounds;
-		_maxDepth = maxDepth;
 		_depth = depth;
 
 		_children.clear();
@@ -93,7 +96,7 @@ namespace pbrt
 			_children.push_back(primitive);
 		}
 
-		if (_children.size() >= _branchingFactor && _depth < _maxDepth)
+		if (_children.size() >= _maxPrimitivesPeLeaf && _depth < _maxDepth)
 		{
 			createNodes(_children);
 			_children.clear();
@@ -240,41 +243,42 @@ namespace pbrt
 		zdist = (_bounds.pMax.z - _bounds.pMin.z) / 2;
 
 		Bounds3f b = Bounds3f(_bounds.pMin, Point3f(_bounds.pMin.x + xdist, _bounds.pMin.y + ydist, _bounds.pMin.z + zdist));
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.x += xdist;
 		b.pMax.x += xdist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.y += ydist;
 		b.pMax.y += ydist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.x -= xdist;
 		b.pMax.x -= xdist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.z += zdist;
 		b.pMax.z += zdist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.y -= ydist;
 		b.pMax.y -= ydist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.x += xdist;
 		b.pMax.x += xdist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 
 		b.pMin.y += ydist;
 		b.pMax.y += ydist;
-		_nodes.push_back(new OctreeAccel(p, b, _maxDepth, _depth + 1));
+		_nodes.push_back(new OctreeAccel(p, b, _depth + 1));
 	}
 
 	shared_ptr<OctreeAccel> CreateOctreeAccelerator(const vector<shared_ptr<Primitive>> &prims, const ParamSet &ps)
 	{
 		int maxDepth = ps.FindOneInt("maxDepth", 10);
-		return make_shared<OctreeAccel>(prims, maxDepth);
+		int maxPrimitivesPerLeaf = ps.FindOneInt("maxPrimitivesPerLeaf", 10);
+		return make_shared<OctreeAccel>(prims, maxDepth, maxPrimitivesPerLeaf);
 	}
 
 }

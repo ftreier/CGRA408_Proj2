@@ -94,7 +94,7 @@ def writeSceneFile(scenePath, resultPath):
     sceneFile.write('WorldEnd\n')
     sceneFile.close()
     
-def defaultButtonPush(*args):
+def renderMaterial(*args):
     # get Path to PBRT executable
     sep = '/'
     pp = cmds.textField(pbrtPath, text=1, q=1)
@@ -195,15 +195,15 @@ def savePbrtSceneFile(*args):
         writeSceneFile(location, (location[location.rfind(sep)+1:location.rfind('.')] + '.exr'))
     
 # Make a new window
-window = cmds.window(title="Material Editor", iconName='Short Name', widthHeight=(300, 500))
-cmds.rowColumnLayout(numberOfColumns=3, columnWidth=[(1, 100), (2, 150), (3, 40)])
+window = cmds.window(title="Material Editor", widthHeight=(300, 500))
+cmds.rowColumnLayout(numberOfColumns = 3, columnWidth = [(1, 100), (2, 150), (3, 40)])
 
 cmds.text(label = 'Preview', align = 'left')
 img = cmds.image(image = '', height = 150)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = 'Material', align = 'left')
-matOm = cmds.optionMenu(changeCommand=changeMaterialVisibility)
+matOm = cmds.optionMenu(changeCommand = changeMaterialVisibility)
 cmds.menuItem(label = 'Matte')
 cmds.menuItem(label = plasticName)
 cmds.text(label = '', visible = False, height = 1)
@@ -267,7 +267,7 @@ pbrtPath = cmds.textField(text='/home/treierflor/cgra408/proj2/build/pbrt')
 cmds.button(label='...', command=choosePBRTLocation)
 
 cmds.text(label = '', visible = False, height = 1)
-cmds.button(label='Render', command=defaultButtonPush)
+cmds.button(label='Render', command=renderMaterial)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = '', visible = False, height = 1)
