@@ -39,7 +39,7 @@ def writeSceneFile(scenePath, resultPath):
     sceneFile.write(resultPath.replace('\\', '\\\\'))
     sceneFile.write('"\n')
     sceneFile.write('Integrator "directlighting" "integer maxdepth" [10]\n')
-    sceneFile.write('Sampler "halton" "integer pixelsamples" [16]\n')
+    sceneFile.write('Sampler "halton" "integer pixelsamples" [8]\n')
     sceneFile.write('WorldBegin\n')
     sceneFile.write('LightSource "infinite" "color L" [1 1 1]\n')
     sceneFile.write('Translate 0 -0.4 0\n')
@@ -117,14 +117,14 @@ def defaultButtonPush(*args):
     subprocess.call([pp, scenePath], stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
     
     # set the rendered image
-    cmds.image( img, image = resultPath, e=1)
+    cmds.image(img, image = resultPath, e=1)
 
 def choosePBRTLocation(*args):
     pp = cmds.textField(pbrtPath, text=1, q=1)
     sep = '\\'
     if not pp.find(sep):
         sep = '/'
-    newpbrtLocation = cmds.fileDialog( m = 0, dm = pp[:pp.rfind(sep)] + sep + '*.*' )
+    newpbrtLocation = cmds.fileDialog(m = 0, dm = pp[:pp.rfind(sep)] + sep + '*.*')
     if newpbrtLocation:
         cmds.textField(pbrtPath, text=newpbrtLocation, e=1)
     
@@ -193,61 +193,61 @@ def changeTextureVisibility(item):
 def savePbrtSceneFile(*args):
     pp = cmds.textField(pbrtPath, text=1, q=1)
     sep = '\\'
-    location = cmds.fileDialog( m = 1, dm = pp[:pp.rfind(sep)] + sep + '*.pbrt', dfn = 'material.pbrt')
+    location = cmds.fileDialog(m = 1, dm = pp[:pp.rfind(sep)] + sep + '*.pbrt', dfn = 'material.pbrt')
     if location:
         location = location.replace('/', '\\\\')
         writeSceneFile(location, (location[location.rfind(sep)+1:location.rfind('.')] + '.exr'))
     
 # Make a new window
-window = cmds.window( title="Material Editor", iconName='Short Name', widthHeight=(300, 500) )
-cmds.rowColumnLayout( numberOfColumns=3, columnWidth=[(1, 100), (2, 150), (3, 40)] )
+window = cmds.window(title="Material Editor", iconName='Short Name', widthHeight=(300, 500))
+cmds.rowColumnLayout(numberOfColumns=3, columnWidth=[(1, 100), (2, 150), (3, 40)])
 
-cmds.text( label = 'Preview', align = 'left' )
-img = cmds.image( image = '', height = 150 )
-cmds.text( label = '', visible = False, height = 1)
+cmds.text(label = 'Preview', align = 'left')
+img = cmds.image(image = '', height = 150)
+cmds.text(label = '', visible = False, height = 1)
 
-cmds.text( label = 'Material', align = 'left' )
-matOm = cmds.optionMenu( changeCommand=changeMaterialVisibility )
+cmds.text(label = 'Material', align = 'left')
+matOm = cmds.optionMenu(changeCommand=changeMaterialVisibility)
 cmds.menuItem(label = 'Matte')
 cmds.menuItem(label = plasticName)
-cmds.text( label = '', visible = False, height = 1)
+cmds.text(label = '', visible = False, height = 1)
 
 useColCb = cmds.checkBox(label = 'Use Kd Colour', changeCommand=changeMatColorVisibility)
-matColCs = cmds.colorSliderGrp( rgb = (1, 1, 1), visible = False )
-cmds.text( label = '', visible = False, height = 1)
+matColCs = cmds.colorSliderGrp(rgb = (1, 1, 1), visible = False)
+cmds.text(label = '', visible = False, height = 1)
 
 useKsColCb = cmds.checkBox(label = 'Use Ks Colour', changeCommand=changeMatColorVisibility, visible = False, height = 1)
-matKsColCs = cmds.colorSliderGrp( rgb = (1, 1, 1), visible = False, height = 1)
-cmds.text( label = '', visible = False, height = 1)
+matKsColCs = cmds.colorSliderGrp(rgb = (1, 1, 1), visible = False, height = 1)
+cmds.text(label = '', visible = False, height = 1)
 
 useTextureCb = cmds.checkBox(label = 'Use Texture', changeCommand=changeMatColorVisibility, value = True)
-cmds.text( label = '', visible = False, height = 1)
-cmds.text( label = '', visible = False, height = 1)
+cmds.text(label = '', visible = False, height = 1)
+cmds.text(label = '', visible = False, height = 1)
 
-sigmaT1 = cmds.text( label = 'Sigma', align = 'left')
-sigmaFf = cmds.floatField( minValue = 0, maxValue = 1)
-cmds.text( label = '', visible = False, height = 1)
+sigmaT1 = cmds.text(label = 'Sigma', align = 'left')
+sigmaFf = cmds.floatField(minValue = 0, maxValue = 1)
+cmds.text(label = '', visible = False, height = 1)
 
-remapRoughT1 = cmds.text( label = 'Remap Roughness', align = 'left', visible = False, height = 1)
+remapRoughT1 = cmds.text(label = 'Remap Roughness', align = 'left', visible = False, height = 1)
 remapRoughCb = cmds.checkBox(label = '', value = True, visible = False, height = 1)
-cmds.text( label = '', visible = False, height = 1)
+cmds.text(label = '', visible = False, height = 1)
 
-cmds.text(label = 'Texture', align = 'left' )
-textureOm = cmds.optionMenu(changeCommand=changeTextureVisibility )
+cmds.text(label = 'Texture', align = 'left')
+textureOm = cmds.optionMenu(changeCommand=changeTextureVisibility)
 cmds.menuItem(label = 'Opal')
 cmds.menuItem(label = 'Wrinkled')
 cmds.text(label = '', visible = False, height = 1)
 
-mcT1 = cmds.text( label = 'Main Colour', align = 'left' )
-mcCs = cmds.colorSliderGrp( rgb = (147.0 / 255.0, 160.0 / 255.0, 223.0 / 255.0) )
+mcT1 = cmds.text(label = 'Main Colour', align = 'left')
+mcCs = cmds.colorSliderGrp(rgb = (147.0 / 255.0, 160.0 / 255.0, 223.0 / 255.0))
 cmds.text(label = '', visible = False, height = 1)
 
-col1T1 = cmds.text( label = 'Colour 1', align = 'left' )
-col1Cs = cmds.colorSliderGrp( rgb = (240.0 / 255.0, 162.0 / 255.0, 177.0 / 255.0) )
+col1T1 = cmds.text(label = 'Colour 1', align = 'left')
+col1Cs = cmds.colorSliderGrp(rgb = (240.0 / 255.0, 162.0 / 255.0, 177.0 / 255.0))
 cmds.text(label = '', visible = False, height = 1)
 
-col2T1 = cmds.text( label = 'Colour 2', align = 'left' )
-col2Cs = cmds.colorSliderGrp( rgb = (132.0 / 255.0, 235.0 / 255.0, 162.0 / 255.0) )
+col2T1 = cmds.text(label = 'Colour 2', align = 'left')
+col2Cs = cmds.colorSliderGrp(rgb = (132.0 / 255.0, 235.0 / 255.0, 162.0 / 255.0))
 cmds.text(label = '', visible = False, height = 1)
 
 octT1 = cmds.text(label = 'Octaves', align = 'left')
@@ -255,28 +255,28 @@ octIf = cmds.intField(minValue = 1, maxValue = 512, value = 8)
 cmds.text(label = '', visible = False, height = 1)
 
 roughT1 = cmds.text(label = 'Roughness', align = 'left')
-roughFf = cmds.floatField( minValue = 0, maxValue = 1, value = 0.5)
+roughFf = cmds.floatField(minValue = 0, maxValue = 1, value = 0.5)
 cmds.text(label = '', visible = False, height = 1)
 
-scT1 = cmds.text( label = 'Scale', align = 'left')
-scFf = cmds.floatField( minValue = 0.1, maxValue = 10, value = 4)
+scT1 = cmds.text(label = 'Scale', align = 'left')
+scFf = cmds.floatField(minValue = 0.1, maxValue = 10, value = 4)
 cmds.text(label = '', visible = False, height = 1)
 
-colVarT1 = cmds.text( label = 'Colour variant', align = 'left')
-colVarFf = cmds.floatField( minValue = 0, maxValue = 1, value = 0.5)
+colVarT1 = cmds.text(label = 'Colour variant', align = 'left')
+colVarFf = cmds.floatField(minValue = 0, maxValue = 1, value = 0.5)
 cmds.text(label = '', visible = False, height = 1)
 
-cmds.text( label = 'PBRT Path', align = 'left')
-pbrtPath = cmds.textField( text='C:\\Data\\Victoria\\CGRA408_Rendering\\Ass2\\build\\Release\\pbrt.exe' )
-cmds.button( label='...', command=choosePBRTLocation )
+cmds.text(label = 'PBRT Path', align = 'left')
+pbrtPath = cmds.textField(text='C:\\Data\\Victoria\\CGRA408_Rendering\\Ass2\\build\\Release\\pbrt.exe')
+cmds.button(label='...', command=choosePBRTLocation)
 
 cmds.text(label = '', visible = False, height = 1)
-cmds.button( label='Render', command=defaultButtonPush )
+cmds.button(label='Render', command=defaultButtonPush)
 cmds.text(label = '', visible = False, height = 1)
 
 cmds.text(label = '', visible = False, height = 1)
-cmds.button( label='Save PBRT Scene File', command=savePbrtSceneFile)
+cmds.button(label='Save PBRT Scene File', command=savePbrtSceneFile)
 cmds.text(label = '', visible = False, height = 1)
 
-cmds.setParent( '..')
-cmds.showWindow( window )
+cmds.setParent('..')
+cmds.showWindow(window)
