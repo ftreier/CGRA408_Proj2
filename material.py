@@ -76,7 +76,6 @@ def writeSceneFile(scenePath, resultPath):
         sceneFile.write(' ')
     if matUseTextVal:
         sceneFile.write('"texture Kd" "tex" ')
-        print matVal
         if matVal == plasticName:
             sceneFile.write('"texture Ks" "tex" ')
     if matVal == plasticName:
@@ -200,7 +199,7 @@ def savePbrtSceneFile(*args):
         writeSceneFile(location, (location[location.rfind(sep)+1:location.rfind('.')] + '.exr'))
     
 # Make a new window
-window = cmds.window( title="Material Editor", iconName='Short Name', widthHeight=(300, 600) )
+window = cmds.window( title="Material Editor", iconName='Short Name', widthHeight=(300, 500) )
 cmds.rowColumnLayout( numberOfColumns=3, columnWidth=[(1, 100), (2, 150), (3, 40)] )
 
 cmds.text( label = 'Preview', align = 'left' )
@@ -221,7 +220,7 @@ useKsColCb = cmds.checkBox(label = 'Use Ks Colour', changeCommand=changeMatColor
 matKsColCs = cmds.colorSliderGrp( rgb = (1, 1, 1), visible = False, height = 1)
 cmds.text( label = '', visible = False, height = 1)
 
-useTextureCb = cmds.checkBox(label = 'Use Texture', changeCommand=changeMatColorVisibility)
+useTextureCb = cmds.checkBox(label = 'Use Texture', changeCommand=changeMatColorVisibility, value = True)
 cmds.text( label = '', visible = False, height = 1)
 cmds.text( label = '', visible = False, height = 1)
 
