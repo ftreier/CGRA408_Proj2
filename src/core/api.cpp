@@ -96,7 +96,7 @@
 #include "shapes/loopsubdiv.h"
 #include "shapes/nurbs.h"
 #include "shapes/paraboloid.h"
-#include "shapes/bbsphere.h"
+#include "shapes/bbSphere.h"
 #include "shapes/sphere.h"
 #include "shapes/triangle.h"
 #include "shapes/plymesh.h"
