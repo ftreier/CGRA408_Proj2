@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 
 	filenames.clear();
 
-	for(int i = 180; i <= 360; i += 30)
+	for(int i = 0; i <= 360; i += 30)
 	{
 		filenames.push_back("PBRT/files/bbsphere" + std::to_string(i) + ".pbrt");
 		filenames.push_back("PBRT/files/sphere" + std::to_string(i) + ".pbrt");
